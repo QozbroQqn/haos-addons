@@ -186,7 +186,7 @@ bashio::log.info "Syncing .env from ${CONFIG_DIR} to ${STRAPI_DIR}..."
 rsync -av "${CONFIG_DIR}/.env" "${STRAPI_DIR}/.env"
 
 for folder in "src" "config" "database"; do
-    # If folder doesn't exist in /config, copy it from /data/strapi (initial bootstrap)
+    # 1. If folder doesn't exist in /config, initialize it from /data/strapi (initial bootstrap)
     if [ ! -d "${CONFIG_DIR}/${folder}" ]; then
         if [ -d "${STRAPI_DIR}/${folder}" ]; then
             bashio::log.info "Initializing ${folder} in ${CONFIG_DIR}..."
@@ -196,9 +196,15 @@ for folder in "src" "config" "database"; do
         fi
     fi
 
-    # Sync from /config to /data/strapi
-    # This allows users to edit files in /config and have them reflected in the running app
-    bashio::log.info "Syncing ${folder} from ${CONFIG_DIR} to ${STRAPI_DIR}..."
+    # 2. Sync from /data/strapi to /config (Back-sync)
+    # This captures changes made by Strapi (e.g. Content-Type Builder) during the PREVIOUS run.
+    # We use -u (update) to only copy files that are NEWER in the container.
+    bashio::log.info "Back-syncing ${folder} from ${STRAPI_DIR} to ${CONFIG_DIR} (preserving new internal changes)..."
+    rsync -rtuv "${STRAPI_DIR}/${folder}/" "${CONFIG_DIR}/${folder}/"
+
+    # 3. Sync from /config to /data/strapi (Forward-sync)
+    # This ensures the running app has the latest files from the user-accessible /config.
+    bashio::log.info "Forward-syncing ${folder} from ${CONFIG_DIR} to ${STRAPI_DIR}..."
     rsync -rtv --delete "${CONFIG_DIR}/${folder}/" "${STRAPI_DIR}/${folder}/"
 done
 

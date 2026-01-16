@@ -42,14 +42,18 @@ The add-on generates secure defaults for all Strapi secrets on the first start. 
 ## Development & Customization
 
 ### Synchronization
-On every start, the add-on syncs changes from your `/config/` directory to the internal execution directory.
+The add-on uses a two-way synchronization strategy at startup to ensure both your manual edits and Strapi's automatic changes (like the Content-Type Builder) are preserved:
+1. **Back-sync**: Files created or updated by Strapi inside the container (e.g., new APIs) are copied to your `/config/strapi` folder.
+2. **Forward-sync**: Any manual edits you made in `/config/strapi` are then pushed into the container.
+
+**Note:** If you delete a file in `/config/strapi`, it will also be deleted inside the container upon the next restart.
 
 ### Node Environment
 - **Development**: Runs `npm run dev`. This mode is useful for debugging and creating new content types. Note that `--no-watch-admin` is used, so HMR is disabled for the admin panel.
 - **Production**: Runs `npm run start` after a clean build. Use this for better performance once your project is stable.
 
 ### Applying Changes
-You must **restart the add-on** manually to apply changes made to files in the `/config/` directory.
+You must **restart the add-on** manually to apply changes made to files in the `/config/` directory. If you created a new Collection Type in the UI, restarting the add-on will ensure those generated files are safely moved to your persistent `/config/strapi` folder.
 
 ## Networking & Ingress
 
