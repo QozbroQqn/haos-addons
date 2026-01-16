@@ -1,0 +1,54 @@
+name: Strapi
+version: "1.0.0"
+slug: strapi
+description: Headless CMS Strapi as HAOS Add-on
+homeassistant: 2025.11.1
+url: https://github.com/QozbroQqn/haos-addons/tree/main/strapi
+arch:
+  - aarch64
+  - amd64
+startup: services
+boot: auto
+init: false
+panel_icon: mdi:application-braces
+ingress: false
+ingress_port: 1337
+panel_admin: false
+ports:
+  1337/tcp: 1337
+webui: http://[HOST]:[PORT:1337]/admin
+watchdog: http://[HOST]:[PORT:1337]
+apparmor: true
+privileged: []
+map:
+  - type: addon_config
+    read_only: false
+
+options:
+  # If left empty, run.sh will generate secure defaults on first start
+  app_keys: ""
+  api_token_salt: ""
+  admin_jwt_secret: ""
+  jwt_secret: ""
+  transfer_token_salt: ""
+  encryption_key: ""
+  max_refresh_token_lifespan: 7
+  max_session_lifespan: 30
+
+  node_env: development
+  url: ""
+  serve_admin: true
+
+schema:
+  app_keys: password?
+  api_token_salt: password?
+  admin_jwt_secret: password?
+  jwt_secret: password?
+  transfer_token_salt: password?
+  encryption_key: password?
+  max_refresh_token_lifespan: int(1,)?
+  max_session_lifespan: int(1,)?
+
+  node_env: list(production|development)?
+  url: str?
+  serve_admin: bool

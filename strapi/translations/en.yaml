@@ -1,0 +1,34 @@
+configuration:
+  app_keys:
+    name: Application Keys
+    description: "Keep empty for auto generation. A comma-separated list of at least 1 random strings used for session signing. See addon README for more details."
+  api_token_salt:
+    name: API Token Salt
+    description: "Keep empty for auto generation. Random string used to salt API tokens. See addon README for more details."
+  admin_jwt_secret:
+    name: Admin JWT Secret
+    description: "Keep empty for auto generation. Secret used to sign Admin panel tokens. See addon README for more details."
+  jwt_secret:
+    name: User JWT Secret
+    description: "Keep empty for auto generation. Secret used to sign Users-Permissions (API) tokens. See addon README for more details."
+  transfer_token_salt:
+    name: Transfer Token Salt
+    description: "Random string used for data transfer security. See addon README for more details."
+  encryption_key:
+    name: Encryption Key
+    description: "Keep empty for auto generation. Random string used to encrypt data. See addon README for more details."
+  max_refresh_token_lifespan:
+    name: Max Refresh Token Lifespan (days)
+    description: "Defines how long a refresh token is valid. This allows users to stay logged in without re-authenticating as long as they are active. Default is 7."
+  max_session_lifespan:
+    name: Max Session Lifespan (days)
+    description: "Defines the absolute maximum age of a session, after which a full re-login is required regardless of activity. Default is 30."
+  serve_admin:
+    name: Serve Admin Panel
+    description: "If true, you can access the strapi admin UI. See logs for URL"
+  node_env:
+    name: Node Environment
+    description: "The environment mode to run Strapi in. Use 'production' for best performance or 'development' for debugging."
+  url:
+    name: Public URL
+    description: "The public URL of your Strapi instance. If you do not know what this is, leave it blank. 99% of the users don't need to change this."
