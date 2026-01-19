@@ -218,10 +218,12 @@ fi
 
 # Build Strapi
 cd "${STRAPI_DIR}"
-bashio::log.info "Building Strapi (NODE_ENV=${NODE_ENV})"
-npm run build || {
-  bashio::log.warning "Build failed or unnecessary; attempting to continue"
-}
+if [ "${NODE_ENV}" = "production" ]; then
+  bashio::log.info "Building Strapi for Production..."
+  npm run build || bashio::log.warning "Build failed; attempting to continue"
+else
+  bashio::log.info "Skipping explicit build in development mode (npm run dev handles this)"
+fi
 
 bashio::log.notice "-------------------------------------------------------"
 bashio::log.notice "Environment variables created in your addon data folder usually /addon_configs/strapi"

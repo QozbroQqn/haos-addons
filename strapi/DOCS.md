@@ -62,6 +62,9 @@ You must **restart the add-on** manually to apply changes made to files in the `
 
 ## Troubleshooting
 
+- **Watchdog Restarts**: Building the Strapi admin panel is resource-intensive. If your addon restarts repeatedly during the "Building admin panel" phase, it is likely the Home Assistant Watchdog killing the process because it hasn't responded yet.
+  - In production, you can deactivate the watchdog until the build is complete.
+  - In development, build times are even longer and you should deactivate the watchdog entirely.
 - **First Start Fails**: Check the logs. Bootstrapping requires an internet connection to download Strapi and its dependencies.
 - **Changes Not Appearing**: Ensure you have restarted the add-on after editing files in the `/config/` directory.
 - **Port Conflicts**: If port `1337` is already in use, you can change the port mapping in the **Network** tab of the add-on settings.
