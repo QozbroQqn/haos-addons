@@ -216,6 +216,16 @@ if [ -z "$(ls -A "${STRAPI_DIR}/node_modules" 2>/dev/null)" ]; then
   npm install --no-audit --no-fund
 fi
 
+# Install requested plugins
+if bashio::config.has_value 'plugins'; then
+    bashio::log.info "Checking for additional plugins to install..."
+    cd "${STRAPI_DIR}"
+    for plugin in $(bashio::config 'plugins'); do
+        bashio::log.info "Installing plugin: ${plugin}"
+        npm install "${plugin}" --no-audit --no-fund || bashio::log.error "Failed to install plugin: ${plugin}"
+    done
+fi
+
 # Build Strapi
 cd "${STRAPI_DIR}"
 if [ "${NODE_ENV}" = "production" ]; then

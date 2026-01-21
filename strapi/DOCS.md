@@ -26,6 +26,8 @@ To allow easy editing of your Strapi project, this add-on synchronizes key files
 - `/config/config/`: Strapi configuration files.
 - `/config/database/`: Database migrations and seeds.
 - `/config/public/uploads/`: All uploaded media files.
+- `/config/package.json`: Project dependencies and metadata.
+- `/config/package-lock.json`: Locked dependency versions.
 
 ### Key Files
 - `/config/.env`: Environment variables and secrets.
@@ -46,11 +48,29 @@ The add-on uses a two-way synchronization strategy at startup to ensure both you
 1. **Back-sync**: Files created or updated by Strapi inside the container (e.g., new APIs) are copied to your `/config/strapi` folder.
 2. **Forward-sync**: Any manual edits you made in `/config/strapi` are then pushed into the container.
 
-**Note:** If you delete a file in `/config/strapi`, it will also be deleted inside the container upon the next restart.
+**Note1:** If you delete a file in `/config/strapi`, it will also be deleted inside the container upon the next restart.
+
+**Note2:** It is recommended you develop your files NOT inside the `/config/strapi` folder.
+Copy them in a local strapi installation and copy them back after making changes.
+The synchronization always syncs back first.
+If the files in strapi addon are newer than your developed files, they will be overwritten.
 
 ### Node Environment
 - **Development**: Runs `npm run dev`. This mode is useful for debugging and creating new content types. Note that `--no-watch-admin` is used, so HMR is disabled for the admin panel.
 - **Production**: Runs `npm run start` after a clean build. Use this for better performance once your project is stable.
+
+### Installing Plugins
+You can install Strapi plugins from the marketplace by adding the package names to the `plugins` field in the add-on configuration.
+The package name can be found via the **copy install command** button. If you click it, you get a command like this: `npm install plugin-name`.
+The part after `npm install` is the package name.
+
+Example configuration:
+```yaml
+plugins:
+  - "@strapi/plugin-documentation"
+  - "@strapi/plugin-graphql"
+```
+The add-on will automatically run `npm install` for these packages and rebuild Strapi upon the next restart.
 
 ### Applying Changes
 You must **restart the add-on** manually to apply changes made to files in the `/config/` directory. If you created a new Collection Type in the UI, restarting the add-on will ensure those generated files are safely moved to your persistent `/config/strapi` folder.

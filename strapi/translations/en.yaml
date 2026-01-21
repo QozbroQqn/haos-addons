@@ -32,3 +32,6 @@ configuration:
   url:
     name: Public URL
     description: "The public URL of your Strapi instance. If you do not know what this is, leave it blank. 99% of the users don't need to change this."
+  plugins:
+    name: Plugins
+    description: "A list of additional npm packages (e.g. Strapi plugins) to install. Example: @strapi/plugin-documentation"

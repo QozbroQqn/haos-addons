@@ -1,5 +1,5 @@
 name: Strapi
-version: "1.0.0"
+version: "1.1.0"
 slug: strapi
 description: Headless CMS Strapi as HAOS Add-on
 homeassistant: 2025.11.1
@@ -38,6 +38,7 @@ options:
   node_env: development
   url: ""
   serve_admin: true
+  plugins: []
 
 schema:
   app_keys: password?
@@ -52,3 +53,5 @@ schema:
   node_env: list(production|development)?
   url: str?
   serve_admin: bool
+  plugins:
+    - str
