@@ -8,4 +8,4 @@ My created add ons for recent home assistant OS installations
 - I dont give support for this. If you need help, please ask in the community forum.
 
 ---
-Made by [QozbroQqn](https://github.com/QozbroQqn) with ❤️ for HAOS 2025
+Made by [QozbroQqn](https://github.com/QozbroQqn) with ❤️ for HAOS 2026
