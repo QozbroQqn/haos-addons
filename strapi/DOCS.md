@@ -19,7 +19,7 @@ Once started, you can access the Strapi Admin panel via the **Open Web UI** butt
 
 ## Persistence & Directory Structure
 
-To allow easy editing of your Strapi project, this add-on synchronizes key files between the internal container storage and your Home Assistant `/config/` directory (accessible via Samba or File Editor).
+To allow easy editing of your Strapi project, this add-on synchronizes key files between the internal container storage and your Home Assistant `/config/` directory (accessible via Samba or File Editor). The Strapi project is installed in `/config/strapi`, so there is no `/data/strapi` sync to maintain.
 
 ### Mapped Folders
 - `/config/src/`: Your custom API, components, and frontend code.
@@ -50,10 +50,7 @@ The add-on uses a two-way synchronization strategy at startup to ensure both you
 
 **Note1:** If you delete a file in `/config/strapi`, it will also be deleted inside the container upon the next restart.
 
-**Note2:** It is recommended you develop your files NOT inside the `/config/strapi` folder.
-Copy them in a local strapi installation and copy them back after making changes.
-The synchronization always syncs back first.
-If the files in strapi addon are newer than your developed files, they will be overwritten.
+**Note2:** You can develop directly inside `/config/strapi`. Strapi watches files in development mode and apllies changes automatically
 
 ### Node Environment
 - **Development**: Runs `npm run dev`. This mode is useful for debugging and creating new content types. Note that `--no-watch-admin` is used, so HMR is disabled for the admin panel.

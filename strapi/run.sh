@@ -2,8 +2,7 @@
 
 set -euo pipefail
 
-STRAPI_DIR="/data/strapi"
-CONFIG_DIR="/config"
+STRAPI_DIR="/config"
 
 NODE_ENV=$(bashio::config 'node_env')
 SERVE_ADMIN=$(bashio::config 'serve_admin')
@@ -45,11 +44,10 @@ if [ -z "${ENCRYPTION_KEY}" ]; then ENCRYPTION_KEY="$(gen_secret)"; fi
 
 # Database settings
 DATABASE_CLIENT=sqlite
-DATABASE_FILENAME="${CONFIG_DIR}/data.sqlite"
+DATABASE_FILENAME="${STRAPI_DIR}/data.sqlite"
 DATABASE_DIR="$(dirname "${DATABASE_FILENAME}")"
 
-mkdir -p "${CONFIG_DIR}/public/uploads" "${STRAPI_DIR}" "${DATABASE_DIR}"
-chmod 755 /data || true
+mkdir -p "${STRAPI_DIR}/public/uploads" "${DATABASE_DIR}"
 
 # Early diagnostics
 bashio::log.info "-------------------------------------------------------"
@@ -108,18 +106,7 @@ export default ({ env }) => ({
   serveAdminPanel: env.bool('SERVE_ADMIN'),
   transfer: { token: { salt: env('TRANSFER_TOKEN_SALT') } },
   secrets: { encryptionKey: env('ENCRYPTION_KEY') },
-});
-EOF
-  
-  # Configure server to bind HOST/PORT and optional URL (PUBLIC_URL)
-  cat > "${STRAPI_DIR}/config/server.ts" <<EOF
-export default ({ env }) => ({
-  app: { keys: env.array('APP_KEYS') },
-  dirs: { public: '${CONFIG_DIR}/public' },
-  host: env('HOST', 'localhost'),
-  port: env.int('PORT', 1337),
-  proxy: env.bool('PROXY', true),
-  url: env('URL', 'http://homeassistant.local:1337'),
+  watchIgnoreFiles: [ '**/data.sqlite' ],
 });
 EOF
   
@@ -130,6 +117,7 @@ export default ({ env }) => ({
     client: env('DATABASE_CLIENT', 'sqlite'),
     connection: { filename: env('DATABASE_FILENAME', '${DATABASE_FILENAME}') },
     useNullAsDefault: true,
+    acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
   },
 });
 EOF
@@ -150,9 +138,9 @@ EOF
 fi
 
 # Ensure .env exists in /config
-if [ ! -f "${CONFIG_DIR}/.env" ]; then
-    bashio::log.info "Initializing .env in ${CONFIG_DIR}..."
-    cat > "${CONFIG_DIR}/.env" <<EOF
+if [ ! -f "${STRAPI_DIR}/.env" ]; then
+    bashio::log.info "Initializing .env in ${STRAPI_DIR}..."
+    cat > "${STRAPI_DIR}/.env" <<EOF
 # Server
 HOST=${HOST}
 PORT=${PORT}
@@ -179,34 +167,6 @@ DATABASE_FILENAME=${DATABASE_FILENAME}
 STRAPI_TELEMETRY_DISABLED=true
 EOF
 fi
-
-# Sync .env from /config to /data/strapi
-# This allows custom env vars to be preserved and used
-bashio::log.info "Syncing .env from ${CONFIG_DIR} to ${STRAPI_DIR}..."
-rsync -av "${CONFIG_DIR}/.env" "${STRAPI_DIR}/.env"
-
-for folder in "src" "config" "database"; do
-    # 1. If folder doesn't exist in /config, initialize it from /data/strapi (initial bootstrap)
-    if [ ! -d "${CONFIG_DIR}/${folder}" ]; then
-        if [ -d "${STRAPI_DIR}/${folder}" ]; then
-            bashio::log.info "Initializing ${folder} in ${CONFIG_DIR}..."
-            cp -r "${STRAPI_DIR}/${folder}" "${CONFIG_DIR}/"
-        else
-            mkdir -p "${CONFIG_DIR}/${folder}"
-        fi
-    fi
-
-    # 2. Sync from /data/strapi to /config (Back-sync)
-    # This captures changes made by Strapi (e.g. Content-Type Builder) during the PREVIOUS run.
-    # We use -u (update) to only copy files that are NEWER in the container.
-    bashio::log.info "Back-syncing ${folder} from ${STRAPI_DIR} to ${CONFIG_DIR} (preserving new internal changes)..."
-    rsync -rtuv "${STRAPI_DIR}/${folder}/" "${CONFIG_DIR}/${folder}/"
-
-    # 3. Sync from /config to /data/strapi (Forward-sync)
-    # This ensures the running app has the latest files from the user-accessible /config.
-    bashio::log.info "Forward-syncing ${folder} from ${CONFIG_DIR} to ${STRAPI_DIR}..."
-    rsync -rtv --delete "${CONFIG_DIR}/${folder}/" "${STRAPI_DIR}/${folder}/"
-done
 
 # Install dependencies if needed
 if [ -z "$(ls -A "${STRAPI_DIR}/node_modules" 2>/dev/null)" ]; then

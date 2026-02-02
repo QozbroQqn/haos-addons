@@ -1,5 +1,20 @@
 # Changelog
 
+# 1.2.0
+
+Thats a breaking change disguised as a minor version bump.
+**Please backup your data! Dont forget the database!**
+
+- Changed Strapi installation location to `/config/strapi`, removing the need to sync with `/data/strapi`.
+
+#### Migration guide:
+- If you havent changed any files, you can skip migration
+- stop addon
+- backup all files from /addon_configs/<your-strapi-folder> (copy them somewhere)
+- uninstall addon entirely with data
+- install addon again
+- copy files back
+
 ## 1.1.0
 - Added `plugins` configuration field to allow installing npm packages/plugins from the marketplace.
 - Added persistence for `package.json` and `package-lock.json` in the user configuration directory.
