@@ -5,7 +5,7 @@
 Thats a breaking change disguised as a minor version bump.
 **Please backup your data! Dont forget the database!**
 
-- Changed Strapi installation location to `/config/strapi`, removing the need to sync with `/data/strapi`.
+- Changed Strapi installation location to `/config`, removing the need to sync with `/data/strapi`.
 
 #### Migration guide:
 - If you havent changed any files, you can skip migration
