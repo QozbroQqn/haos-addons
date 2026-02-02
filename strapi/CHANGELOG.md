@@ -12,8 +12,8 @@ Thats a breaking change disguised as a minor version bump.
 - stop addon
 - backup all files from /addon_configs/<your-strapi-folder> (copy them somewhere)
 - uninstall addon entirely with data
-- install addon again
-- copy files back
+- install addon again and wait if it installs and runs fine
+- stop addon -> copy files back -> start addon
 
 ## 1.1.0
 - Added `plugins` configuration field to allow installing npm packages/plugins from the marketplace.
