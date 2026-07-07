@@ -81,11 +81,9 @@ if [ ! -f "${STRAPI_DIR}/package.json" ]; then
   export CI=true STRAPI_TELEMETRY_DISABLED=true
   export npm_config_loglevel=${npm_config_loglevel:-warn}
 
-  # FIXME: https://github.com/strapi/strapi/issues/24293
-  # Unfortunately we have to do "... yes '' | npx ..." for now
-  yes '' | npx --yes create-strapi@latest "${STRAPI_DIR}" \
-               --ts --skip-db --skip-cloud --install --no-run --no-example --no-git-init --use-npm \
-               2>&1 || true
+  npx --yes create-strapi@latest "${STRAPI_DIR}" \
+      --ts --skip-db --skip-cloud --install --no-run --no-example --no-git-init --use-npm \
+      2>&1 || true
       
   if [ ! -f "$STRAPI_DIR/package.json" ]; then
     bashio::log.error "Failed to install Strapi"

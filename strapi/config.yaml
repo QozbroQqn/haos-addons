@@ -1,5 +1,5 @@
 name: Strapi
-version: "1.2.0"
+version: "1.2.1"
 slug: strapi
 description: Headless CMS Strapi as HAOS Add-on
 homeassistant: 2025.11.1

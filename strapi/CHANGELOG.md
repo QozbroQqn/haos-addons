@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+- Removed the obsolete `create-strapi` bootstrap workaround in `run.sh`. The
+  upstream AB-testing prompt that required piping `yes ''` into the CLI was
+  removed (strapi/strapi#24293), so the scaffolding command now runs directly.
+
 # 1.2.0
 
 Thats a breaking change disguised as a minor version bump.
