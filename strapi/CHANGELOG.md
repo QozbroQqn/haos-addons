@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.2
+- Fixed the secrets-rotation notice in `run.sh` — it previously claimed
+  secrets are regenerated on every restart unless copied to the addon
+  Configuration, which does not match the code (`.env` is written once, on
+  first start, and never touched again after that).
+- Documented the first-start and secret-rotation procedure in `DOCS.md`
+  ("Managing Secrets").
+- Added the missing "Keep empty for auto generation" hint to the Transfer
+  Token Salt field description.
+
 ## 1.2.1
 - Removed the obsolete `create-strapi` bootstrap workaround in `run.sh`. The
   upstream AB-testing prompt that required piping `yes ''` into the CLI was

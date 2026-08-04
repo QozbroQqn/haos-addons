@@ -35,11 +35,29 @@ To allow easy editing of your Strapi project, this add-on synchronizes key files
 
 ## Managing Secrets
 
-The add-on generates secure defaults for all Strapi secrets on the first start. These are stored in `/config/.env`.
+Six secrets protect Strapi: `app_keys`, `api_token_salt`, `admin_jwt_secret`, `jwt_secret`, `transfer_token_salt`, `encryption_key`. They live in `/config/.env`, not in the add-on's Configuration UI.
 
-**Important:**
-- The `.env` file in the `/config/` directory is the **Source of Truth** after the first run.
-- To change secrets later, edit `/config/.env` directly and restart the add-on.
+### First Start
+
+On the very first start, if `/config/.env` does not exist yet, the add-on creates it:
+- Any secret field filled in under **Configuration** is copied into `.env` as-is (useful if you already have existing secrets you want to keep, e.g. when migrating from another instance).
+- Every secret field left empty is replaced with a freshly generated random value.
+
+### `.env` Is the Source of Truth Afterwards
+
+Once `/config/.env` exists, it is never touched again on restart — the Configuration UI has **no effect** anymore, even if you change it there. All sessions, API tokens, and cookies are validated against `/config/.env` only.
+
+### Rotating Secrets
+
+For example after an accidental leak (e.g. a secret ending up in a log or a shared terminal):
+
+1. In **Settings → Add-ons → Strapi → Configuration**, clear the fields you want to rotate (leave them empty).
+2. Delete `/config/.env` from the add-on's persistent folder (back it up first if you're unsure).
+3. Restart the add-on. A new `.env` is generated exactly as described under "First Start" above, using fresh random values for every field you cleared.
+4. Log back in to the Strapi admin panel — the previous session is now invalid.
+5. Re-create any API tokens under **Settings → API Tokens** — the old ones no longer validate — and update every consumer that stores one (e.g. a Home Assistant `secrets.yaml` entry).
+
+`encryption_key` additionally protects any Strapi field or plugin data stored encrypted at rest. Only rotate it if you're sure nothing relies on the old value — otherwise that data becomes unreadable.
 
 ## Development & Customization
 

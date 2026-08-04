@@ -194,10 +194,10 @@ else
 fi
 
 bashio::log.notice "-------------------------------------------------------"
-bashio::log.notice "Environment variables created in your addon data folder usually /addon_configs/strapi"
-bashio::log.notice "If you lose them, strapi wont work anymore and need to be rebuilded."
-bashio::log.warning "You have to copy the secrets from the created environment variables to the addon config or they are regenerated everytime strapi starts. See addon README for more details."
-bashio::log.notice "Keep in mind that all sessions, API tokens or other secrets related stuff become invalid."
+bashio::log.notice ".env in your addon data folder (usually /addon_configs/strapi) is only written once, on first start."
+bashio::log.notice "After that .env is the source of truth and is never regenerated on restart -- changing the addon Configuration afterwards has no effect."
+bashio::log.warning "To rotate secrets: clear the fields in the addon Configuration, delete .env, then restart. This invalidates all sessions, API tokens and other secrets-related state; the database itself is untouched. See addon DOCS.md (Managing Secrets) for the full procedure."
+bashio::log.notice "If you lose .env without rotating on purpose, strapi wont work anymore and needs to be rebuilded."
 bashio::log.notice "As long as strapi can start up and the database is still present, you will be able to login to the admin."
 bashio::log.notice "-------------------------------------------------------"
 

@@ -13,7 +13,7 @@ configuration:
     description: "Keep empty for auto generation. Secret used to sign Users-Permissions (API) tokens. See addon README for more details."
   transfer_token_salt:
     name: Transfer Token Salt
-    description: "Random string used for data transfer security. See addon README for more details."
+    description: "Keep empty for auto generation. Random string used for data transfer security. See addon README for more details."
   encryption_key:
     name: Encryption Key
     description: "Keep empty for auto generation. Random string used to encrypt data. See addon README for more details."
