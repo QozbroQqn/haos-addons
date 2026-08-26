@@ -1,0 +1,29 @@
+name: JDownloader
+version: "1.0.0"
+slug: jdownloader
+description: JDownloader 2 as HAOS addon
+url: https://github.com/QozbroQqn/haos-addons/tree/main/jdownloader
+webui: http://[HOST]:[PORT:5800]
+panel_icon: "mdi:download"
+arch:
+  - aarch64
+  - amd64
+init: false
+map:
+  - type: addon_config
+    read_only: false
+  - type: share
+    read_only: false
+environment:
+  USER_ID: "0"
+  GROUP_ID: "0"
+  TZ: "Europe/Berlin"
+  DOWNLOAD_DIR: "/share/jdownloader"
+ingress: true
+ingress_port: 5800
+ports:
+  5800/tcp: null
+  3129/tcp: null
+ports_description:
+  5800/tcp: Web UI, only needed when bypassing ingress
+  3129/tcp: MyJDownloader direct connection
