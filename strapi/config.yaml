@@ -1,5 +1,5 @@
 name: Strapi
-version: "1.2.2"
+version: "1.2.3"
 slug: strapi
 description: Headless CMS Strapi as HAOS Add-on
 homeassistant: 2025.11.1
@@ -14,6 +14,17 @@ panel_icon: mdi:application-braces
 ingress: false
 ingress_port: 1337
 panel_admin: false
+# Share the host's network stack instead of publishing a port from the bridge
+# network. A published port has no IPv6 path on Home Assistant OS — Docker runs
+# without IPv6 there, so the bridge only carries IPv4 to the outside. Measured
+# on a Raspberry Pi 5 host: port 8123 answers over IPv6 because Home Assistant
+# core itself runs on the host network, while a published add-on port fails
+# even on [::1]. Media served from this add-on therefore did not load for a
+# browser that reached the dashboard over IPv6, as `homeassistant.local` does.
+#
+# `ports` stays for documentation; under host networking the mapping has no
+# effect, the port below is simply the one the process binds.
+host_network: true
 ports:
   1337/tcp: 1337
 webui: http://[HOST]:[PORT:1337]/admin

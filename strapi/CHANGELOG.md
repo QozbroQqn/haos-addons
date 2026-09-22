@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.2.3
+- The add-on now runs on the host network (`host_network: true`) and binds
+  dual-stack (`HOST=::` instead of `0.0.0.0`). Without both, the add-on was
+  unreachable over IPv6: Docker on Home Assistant OS has no IPv6 for published
+  ports, so a browser that resolved the host to an IPv6 address — which
+  `homeassistant.local` does — got an empty response for every file served
+  from this add-on, while Home Assistant itself answered fine on port 8123
+  because core runs on the host network already.
+- `HOST` is exported in `run.sh` rather than only written to `.env`, because
+  `.env` is created once on first start and never rewritten. An installation
+  that predates this version still has `HOST=0.0.0.0` in its `.env`, and
+  dotenv leaves an already-set environment variable alone.
+- The add-on keeps its internal hostname: a slug on the host network resolves
+  to the host's address inside the Home Assistant network, so
+  `http://<slug>:1337` continues to work for other containers.
+
 ## 1.2.2
 - Fixed the secrets-rotation notice in `run.sh` — it previously claimed
   secrets are regenerated on every restart unless copied to the addon

@@ -8,8 +8,17 @@ NODE_ENV=$(bashio::config 'node_env')
 SERVE_ADMIN=$(bashio::config 'serve_admin')
 USE_INGRESS=$(bashio::addon.ingress)
 
-# For internal docker environment. No sense in making changes
-HOST=0.0.0.0
+# `::` binds dual-stack: Node accepts IPv6 and IPv4-mapped connections alike,
+# where the former 0.0.0.0 was IPv4 only. With host_network that is what makes
+# the add-on reachable over IPv6 at all — see config.yaml for why the published
+# port could not be.
+#
+# Exported on purpose. .env is written once on first start and is never
+# rewritten, so an existing installation still carries HOST=0.0.0.0 in it.
+# dotenv does not overwrite a variable that is already in the environment, so
+# exporting here is what reaches an add-on that was installed before this
+# version.
+export HOST=::
 PORT=1337
 PROXY=true
 
