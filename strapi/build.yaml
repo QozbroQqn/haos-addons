@@ -1,0 +1,18 @@
+# This add-on never carried a build.yaml and relied on the Supervisor picking a
+# default base image. That default is gone in Supervisor 2026.09.2: a rebuild
+# fails with `base name ($BUILD_FROM) should not be blank`, so the add-on could
+# no longer be built at all — independently of what changed in it.
+#
+# The pin reproduces exactly the base the working 1.2.0 image was built from,
+# read off its own labels: io.hass.base.name alpine, io.hass.base.version
+# 2025.12.2, io.hass.base.image arm64v8/alpine:3.23. The Dockerfile installs
+# with `apk` and run.sh uses bashio and `with-contenv`, so it needs this Alpine
+# base rather than a plain distribution image.
+build_from:
+  amd64: "ghcr.io/home-assistant/amd64-base:2025.12.2"
+  aarch64: "ghcr.io/home-assistant/aarch64-base:2025.12.2"
+labels:
+  org.opencontainers.image.title: "HAOS Strapi"
+  org.opencontainers.image.description: "Headless CMS Strapi as Home Assistant Add-on"
+  org.opencontainers.image.source: "https://github.com/QozbroQqn/haos-addons/tree/main/strapi"
+  org.opencontainers.image.licenses: "MIT license"

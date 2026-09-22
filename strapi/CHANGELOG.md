@@ -1,6 +1,11 @@
 # Changelog
 
 ## 1.2.3
+- Added the missing `build.yaml`. The add-on had none and relied on the
+  Supervisor's default base image; with Supervisor 2026.09.2 that default is
+  gone and any rebuild fails with `base name ($BUILD_FROM) should not be
+  blank`. The pin reproduces the base the working 1.2.0 image was built from,
+  read off its own labels.
 - The add-on now runs on the host network (`host_network: true`) and binds
   dual-stack (`HOST=::` instead of `0.0.0.0`). Without both, the add-on was
   unreachable over IPv6: Docker on Home Assistant OS has no IPv6 for published
