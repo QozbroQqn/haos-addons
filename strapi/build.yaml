@@ -3,14 +3,18 @@
 # fails with `base name ($BUILD_FROM) should not be blank`, so the add-on could
 # no longer be built at all — independently of what changed in it.
 #
-# The pin reproduces exactly the base the working 1.2.0 image was built from,
-# read off its own labels: io.hass.base.name alpine, io.hass.base.version
-# 2025.12.2, io.hass.base.image arm64v8/alpine:3.23. The Dockerfile installs
-# with `apk` and run.sh uses bashio and `with-contenv`, so it needs this Alpine
-# base rather than a plain distribution image.
+# The pin reproduces the base the working 1.2.0 image was built from, read off
+# its own labels: io.hass.base.image was arm64v8/alpine:3.23. Note that these
+# images are tagged by ALPINE version, not by the Home Assistant release date
+# in io.hass.base.version — a tag built from that date does not exist and the
+# build fails with "not found". Both 3.23 tags were checked against the
+# registry before pinning.
+#
+# The Dockerfile installs with `apk` and run.sh uses bashio and `with-contenv`,
+# so it needs this Alpine base rather than a plain distribution image.
 build_from:
-  amd64: "ghcr.io/home-assistant/amd64-base:2025.12.2"
-  aarch64: "ghcr.io/home-assistant/aarch64-base:2025.12.2"
+  amd64: "ghcr.io/home-assistant/amd64-base:3.23"
+  aarch64: "ghcr.io/home-assistant/aarch64-base:3.23"
 labels:
   org.opencontainers.image.title: "HAOS Strapi"
   org.opencontainers.image.description: "Headless CMS Strapi as Home Assistant Add-on"
